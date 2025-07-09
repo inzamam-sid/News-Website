@@ -1,71 +1,82 @@
-import React, { useState,  useEffect  } from 'react'
-import Card from './Card';
+import React, { useEffect, useState, useCallback } from "react";
+import Card from "./Card";
+import NewsSection from "./NewsSection";
 
 function Newsapp() {
+  const [search, setSearch] = useState("india");
+  const [newData, setNewsData] = useState([]);
+  const [visibleCount, setVisibleCount] = useState(6);
+  const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 
-    const[search, setSearch] = useState("india");
-    const[newData, setNewsData] = useState(null);
+  const getData = async () => {
+    const response = await fetch(`https://newsapi.org/v2/everything?q=${search}&apiKey=${API_KEY}`);
+    const jsonData = await response.json();
+    setNewsData(jsonData.articles);
+  };
 
-    // const API_KEY="ec1b8744c00147e8874fbff89016f250";
-    const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+  const handleInput = (e) => {
+    setSearch(e.target.value);
+  };
 
-    // const API_KEY="81782751e0004b1a9024bd2086761e56";
-    useEffect(() => {
-        getData();
-    }, []);
-    const getData = async () =>{
-        const response = await fetch(`https://newsapi.org/v2/everything?q=${search}&apiKey=${API_KEY}`);
-        const jsonData = await response.json();
-        console.log(jsonData.articles);
-        setNewsData(jsonData.articles)
+  const userInput = (event) => {
+    setSearch(event.target.value);
+    getData();
+  };
 
+  const handleScroll = useCallback(() => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop + 100 >=
+      document.documentElement.offsetHeight
+    ) {
+      setVisibleCount((prev) => prev + 3);
     }
-    const handleInput = (e) =>{
-        console.log(e.target.value);
-        setSearch(e.target.value);
-    }
+  }, []);
 
-     const userInput = (event) =>{
-        setSearch(event.target.value)
-    }
+  useEffect(() => {
+    getData();
+  }, []);
 
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   return (
     <div>
-        <nav>
-            <div>
-                <h1>Trendy News</h1>
-            </div>
-            <ul>
-                <a>News</a>
-                <a>Trebding</a>
-            </ul>
-            <div className='searchBar'>
-                <input type='text' placeholder='Search News' value={search} onChange={handleInput}/>
-                <button onClick={getData}>Search</button>
+      <nav>
+        <h1>Trendy News</h1>
+        <div className="navCenter">
+          <div className="navTitle">Stay with TrendyNews</div>
+          <div className="navCategoryBtns">
+            <button value="sports" onClick={userInput}>Sports</button>
+            <button value="politics" onClick={userInput}>Politics</button>
+            <button value="entertainment" onClick={userInput}>Entertainment</button>
+            <button value="health" onClick={userInput}>Health</button>
+            <button value="fitness" onClick={userInput}>Fitness</button>
+          </div>
+        </div>
+        <div className="searchBar">
+          <input type="text" value={search} onChange={handleInput} placeholder="Search News" />
+          <button onClick={getData}>Search</button>
+        </div>
+      </nav>
 
-            </div>
-        </nav>
-        <div className='head'>Stay with TrendyNews</div>
-        <div className='categoryBtn'>
-            <button onClick={userInput} value="sports">Sports</button>
-            <button onClick={userInput} value="politics">Politics</button>
-            <button onClick={userInput} value="entertainment">Entertainment</button>
-            <button onClick={userInput} value="health">Health</button>
-            <button onClick={userInput} value="fitness">Fitness</button>
-        </div>
-        <div>
-            {newData? <Card data={newData}/>:null}
-        </div>
+      <div className="date">
+        {new Date().toLocaleDateString("en-GB", {
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+        })}
+      </div>
+
+      {newData.length > 0 && <Card data={newData.slice(0, 5)} />}
+      <h2 style={{ margin: "20px 0 10px 40px" }}>News</h2>
+      <NewsSection data={newData.slice(5, 5 + visibleCount)} />
     </div>
-  )
+  );
 }
 
-export default Newsapp
-
-
-
-
+export default Newsapp;
 
 
 
