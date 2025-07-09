@@ -6,7 +6,9 @@ function Newsapp() {
     const[search, setSearch] = useState("india");
     const[newData, setNewsData] = useState(null);
 
-    const API_KEY="ec1b8744c00147e8874fbff89016f250";
+    // const API_KEY="ec1b8744c00147e8874fbff89016f250";
+    const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+
     // const API_KEY="81782751e0004b1a9024bd2086761e56";
     useEffect(() => {
         getData();
