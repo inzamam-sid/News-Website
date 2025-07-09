@@ -15,7 +15,7 @@ nav{
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: lightblue;
+  background-color: #30ffb3;;
   padding: 9px;
 }
 nav input{
@@ -99,7 +99,7 @@ nav ul{
   gap: 11px;
   width: 130px;
   height: 33px;
-  background-color: rgb(255, 108, 108);
+  background-color: rgb(55 72 194);
   border: none;
   outline: none;
   font-size: 18px;
