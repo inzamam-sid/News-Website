@@ -9,8 +9,8 @@ function Newsapp() {
   const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 
   const getData = async () => {
-    // const response = await fetch(`https://newsapi.org/v2/everything?q=${search}&apiKey=${API_KEY}`);
-    const response = await fetch(`/news?query=${search}`);
+    const response = await fetch(`https://newsapi.org/v2/everything?q=${search}&apiKey=${API_KEY}`);
+    
     const jsonData = await response.json();
     setNewsData(jsonData.articles);
   };
