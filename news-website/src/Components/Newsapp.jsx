@@ -8,12 +8,24 @@ function Newsapp() {
   const [visibleCount, setVisibleCount] = useState(6);
   const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 
-  const getData = async () => {
-    const response = await fetch(`https://newsapi.org/v2/everything?q=${search}&apiKey=${API_KEY}`);
+  // const getData = async () => {
+  //   const response = await fetch(`https://newsapi.org/v2/everything?q=${search}&apiKey=${API_KEY}`);
     
+  //   const jsonData = await response.json();
+  //   setNewsData(jsonData.articles);
+  // };
+
+  const getData = async () => {
+  try {
+    const response = await fetch(`/api/news?query=${search}`);
     const jsonData = await response.json();
     setNewsData(jsonData.articles);
-  };
+  } catch (error) {
+    console.error("Error fetching from backend:", error);
+    setNewsData([]);
+  }
+};
+
 
   const handleInput = (e) => {
     setSearch(e.target.value);
